@@ -4,13 +4,14 @@ from .historico import Historico
 class Dispositivo:
     STATUS_VALIDOS = {"em uso", "parado", "extraviado", "danificado", "smeict"}
 
-    def __init__(self, serial: str, modelo: str, status: str):
+    def __init__(self, serial: str, modelo: str, status: str, unidade: str):
         if status not in self.STATUS_VALIDOS:
             raise ValueError("Status inválido")
 
         self.serial = serial
         self.modelo = modelo
         self.status = status
+        self.unidade = unidade
         self.historico = Historico()
 
     def atualizar_status(self, novo_status: str):
@@ -35,5 +36,6 @@ class Dispositivo:
             "serial": self.serial,
             "modelo": self.modelo,
             "status": self.status,
+            "unidade": self.unidade,
             "historico": self.historico.to_list()
         }

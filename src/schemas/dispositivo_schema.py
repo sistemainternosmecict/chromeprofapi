@@ -4,3 +4,4 @@ class DispositivoCreate(BaseModel):
     serial: str
     modelo: str
     status: str
+    unidade: str

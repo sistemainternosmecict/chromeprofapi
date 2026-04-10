@@ -19,6 +19,11 @@ class DispositivoService:
             raise ValueError("Dispositivo não encontrado")
 
         dispositivo.transferir(novo_usuario)
+
+        ultimo_registro = dispositivo.historico.obter_ultimo_registro()
+        if ultimo_registro:
+            self.repo.adicionar_historico(serial, ultimo_registro)
+
         return dispositivo
 
     def gerar_termo_aquisicao(self, data):
@@ -38,6 +43,21 @@ class DispositivoService:
         )
 
         dispositivo.transferir(data.responsavel)
+
+        ultimo_registro = dispositivo.historico.obter_ultimo_registro()
+        if ultimo_registro:
+            self.repo.adicionar_historico(data.serial, ultimo_registro)
+
+        termo_data = {
+            "responsavel": data.responsavel,
+            "cpf": data.cpf,
+            "matricula": data.matricula,
+            "telefone": data.telefone,
+            "unidade": data.unidade,
+            "data_aquisicao": data.data_aquisicao,
+            "observacoes": data.observacoes
+        }
+        self.repo.adicionar_termo_aquisicao(data.serial, termo_data)
 
         return termo
 
@@ -59,6 +79,19 @@ class DispositivoService:
         )
 
         dispositivo.atualizar_status("parado")
+        self.repo.atualizar(dispositivo)
+
+        termo_data = {
+            "responsavel": data.responsavel,
+            "cpf": data.cpf,
+            "matricula": data.matricula,
+            "telefone": data.telefone,
+            "unidade": data.unidade,
+            "data_devolucao": data.data_devolucao,
+            "estado_aparelho": data.estado_aparelho,
+            "observacoes": data.observacoes
+        }
+        self.repo.adicionar_termo_devolucao(data.serial, termo_data)
 
         return termo
 
